@@ -1,0 +1,255 @@
+<head>
+  <meta charset="utf-8" />
+  <title>
+    
+      
+        
+        Auditing package dependencies for security vulnerabilities | 
+      
+      
+    npm Documentation
+  </title>
+  <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+  <link rel="icon" type="image/ico" href="/assets/images/favicon.ico" />
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,initial-scale=1,user-scalable=yes">
+</head>
+<header class="header">
+  <div class="header-links">
+    <a href="https://docs.npmjs.com">docs home</a>
+    <a href="https://npmjs.com/support">contact support</a>
+    <a href="https://npm.community">npm.community</a>
+    <a id="www-link" href="https://www.npmjs.com">npmjs.com</a>
+  </div>
+</header>
+
+
+<div class="container">
+
+
+
+
+
+
+<div class="article-head">
+  <div class="breadcrumb">
+    Packages and modules > <a href="
+
+https://docs.npmjs.com/packages-and-modules/securing-your-code
+
+">Securing your code</a>
+  </div>
+
+  <h1><a href="">Auditing package dependencies for security vulnerabilities</a></h1>
+</div>
+
+<div class="article">
+
+<h2 id="about-security-audits">About security audits</h2>
+
+<p>A security audit is an assessment of package dependencies for security vulnerabilities. Security audits help you protect your package’s users by enabling you to find and fix known vulnerabilities in dependencies that could cause data loss, service outages, unauthorized access to sensitive information, or other issues.</p>
+
+<h2 id="running-a-security-audit-with-npm-audit">Running a security audit with <code class="highlighter-rouge">npm audit</code></h2>
+
+<p><strong>Note: The <code class="highlighter-rouge">npm audit</code> command is available in <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4f213f220f7961">[email&#160;protected]</a> To upgrade, run <code class="highlighter-rouge">npm install <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c9a7b9a489a5a8bdacbabd">[email&#160;protected]</a> -g</code>.</strong></p>
+
+<p>The <a href="https://docs.npmjs.com/cli/audit"><code class="highlighter-rouge">npm audit</code> command</a> submits a description of the dependencies configured in your package to your default registry and asks for a report of known vulnerabilities. <code class="highlighter-rouge">npm audit</code> checks direct dependencies, devDependencies, bundledDependencies, and optionalDependencies, but does not check peerDependencies.</p>
+
+<p><code class="highlighter-rouge">npm audit</code> automatically runs when you install a package with <code class="highlighter-rouge">npm install</code>. You can also run <code class="highlighter-rouge">npm audit</code> manually on your <a href="downloading-and-installing-packages-locally">locally installed packages</a> to conduct a security audit of the package and produce a report of dependency vulnerabilities and, if available, suggested patches.</p>
+
+<ol>
+  <li>On the command line, navigate to your package directory by typing <code class="highlighter-rouge">cd path/to/your-package-name</code> and pressing <strong>Enter</strong>.</li>
+  <li>Ensure your package contains <code class="highlighter-rouge">package.json</code> and <code class="highlighter-rouge">package-lock.json</code> files.</li>
+  <li>Type <code class="highlighter-rouge">npm audit</code> and press <strong>Enter</strong>.</li>
+  <li>Review the audit report and run recommended commands or investigate further if needed.</li>
+</ol>
+
+<h3 id="resolving-eauditnopjson-and-eauditnolock-errors">Resolving <code class="highlighter-rouge">EAUDITNOPJSON</code> and <code class="highlighter-rouge">EAUDITNOLOCK</code> errors</h3>
+
+<p><code class="highlighter-rouge">npm audit</code> requires packages to have <code class="highlighter-rouge">package.json</code> and <code class="highlighter-rouge">package-lock.json</code> files.</p>
+
+<ul>
+  <li>If you get an <code class="highlighter-rouge">EAUDITNOPJSON</code> error, create a <code class="highlighter-rouge">package.json</code> file by following the steps in “<a href="creating-a-package-json-file">Creating a package.json file</a>”.</li>
+  <li>If you get an <code class="highlighter-rouge">EAUDITNOLOCK</code> error, make sure your package has a <code class="highlighter-rouge">package.json</code> file, then create the package lock file by running <code class="highlighter-rouge">npm i --package-lock-only</code>.</li>
+</ul>
+
+<h2 id="reviewing-and-acting-on-the-security-audit-report">Reviewing and acting on the security audit report</h2>
+
+<p>Running <code class="highlighter-rouge">npm audit</code> will produce a report of security vulnerabilities with the affected package name, vulnerability severity and description, path, and other information, and, if available, commands to apply patches to resolve vulnerabilities. For more information on the fields in the audit report, see “<a href="about-audit-reports">About audit reports</a>”</p>
+
+<h3 id="security-vulnerabilities-found-with-suggested-updates">Security vulnerabilities found with suggested updates</h3>
+
+<p>If security vulnerabilities are found and updates are available, you can either:</p>
+
+<ul>
+  <li>Run the <code class="highlighter-rouge">npm audit fix</code> subcommand to automatically install compatible updates to vulnerable dependencies.</li>
+  <li>Run the recommended commands individually to install updates to vulnerable dependencies. (Some updates may be semver-breaking changes; for more information, see “<a href="#semver-warnings">SEMVER warnings</a>”.)</li>
+</ul>
+
+<p><span class="screenshot"><img src="/assets/images/packages-and-modules/audit-report-vulns-found-patches.png" alt="command line vulnerability table with suggested fix" /></span></p>
+
+<h4 id="semver-warnings">SEMVER warnings</h4>
+
+<p>If the recommended action is a potential breaking change (semantic version major change), it will be followed by a SEMVER WARNING that says “SEMVER WARNING: Recommended action is a potentially breaking change”. If the package with the vulnerability has changed its API, you may need to make additional changes to your package’s code.</p>
+
+<h3 id="security-vulnerabilities-found-requiring-manual-review">Security vulnerabilities found requiring manual review</h3>
+
+<p>If security vulnerabilities are found, but no patches are available, the audit report will provide information about the vulnerability so you can investigate further.</p>
+
+<p><span class="screenshot"><img src="/assets/images/packages-and-modules/audit-report-vulns-found-manual-review.png" alt="command line audit report requiring manual review" /></span></p>
+
+<p>To address the vulnerability, you can</p>
+
+<ul>
+  <li><a href="#check-for-mitigating-factors">Check for mitigating factors</a></li>
+  <li><a href="#update-dependent-packages-if-a-fix-exists">Update dependent packages if a fix exists</a></li>
+  <li><a href="#fix-the-vulnerability">Fix the vulnerability</a></li>
+  <li><a href="#open-an-issue-in-the-package-or-dependent-package-issue-tracker">Open an issue in the package or dependent package issue tracker</a></li>
+</ul>
+
+<h4 id="check-for-mitigating-factors">Check for mitigating factors</h4>
+
+<p>Review the security advisory in the “More info” field for mitigating factors that may allow you to continue using the package with the vulnerability in limited cases. For example, the vulnerability may only exist when the code is used on specific operating systems, or when a specific function is called.</p>
+
+<h4 id="update-dependent-packages-if-a-fix-exists">Update dependent packages if a fix exists</h4>
+
+<p>If a fix exists but packages that depend on the package with the vulnerability have not been updated to include the fixed version, you may want to open a pull or merge request on the dependent package repository to use the fixed version.</p>
+
+<ol>
+  <li>To find the package that must be updated, check the “Path” field for the location of the package with the vulnerability, then check for the package that depends on it. For example, if the path to the vulnerability is <code class="highlighter-rouge">@package-name &gt; dependent-package &gt; package-with-vulnerability</code>, you will need to update <code class="highlighter-rouge">dependent-package</code>.</li>
+  <li>On the <a href="https://npmjs.com">npm public registry</a>, find the dependent package and navigate to its repository. For more information on finding packages, see “<a href="searching-for-and-choosing-packages-to-download">Searching for and choosing packages to download</a>”.</li>
+  <li>In the dependent package repository, open a pull or merge request to update the version of the vulnerable package to a version with a fix.</li>
+  <li>Once the pull or merge request is merged and the package has been updated in the <a href="https://npmjs.com">npm public registry</a>, update your copy of the package with <code class="highlighter-rouge">npm update</code>.</li>
+</ol>
+
+<h4 id="fix-the-vulnerability">Fix the vulnerability</h4>
+
+<p>If a fix does not exist, you may want to suggest changes that address the vulnerability to the package maintainer in a pull or merge request on the package repository.</p>
+
+<ol>
+  <li>Check the “Path” field for the location of the vulnerability.</li>
+  <li>On the <a href="https://npmjs.com">npm public registry</a>, find the package with the vulnerability. For more information on finding packages, see “<a href="searching-for-and-choosing-packages-to-download">Searching for and choosing packages to download</a>”.</li>
+  <li>In the package repository, open a pull or merge request to make the fix on the package repository.</li>
+  <li>Once the fix is merged and the package has been updated in the npm public registry, update your copy of the package that depends on the package with the fix.</li>
+</ol>
+
+<h4 id="open-an-issue-in-the-package-or-dependent-package-issue-tracker">Open an issue in the package or dependent package issue tracker</h4>
+
+<p>If you do not want to fix the vulnerability or update the dependent package yourself, open an issue in the package or dependent package issue tracker.</p>
+
+<ol>
+  <li>On the <a href="https://npmjs.com">npm public registry</a>, find the package with the vulnerability or the dependent package that needs an update. For more information on finding packages, see “<a href="searching-for-and-choosing-packages-to-download">Searching for and choosing packages to download</a>”.</li>
+  <li>In the package or dependent package issue tracker, open an issue and include information from the audit report, including the vulnerability report from the “More info” field.</li>
+</ol>
+
+<h3 id="no-security-vulnerabilities-found">No security vulnerabilities found</h3>
+
+<p>If no security vulnerabilities are found, this means that packages with known vulnerabilities were not found in your package dependency tree. Since the advisory database can be updated at any time, we recommend regularly running <code class="highlighter-rouge">npm audit</code> manually, or adding <code class="highlighter-rouge">npm audit</code> to your continuous integration process.</p>
+
+<p><span class="screenshot"><img src="/assets/images/packages-and-modules/audit-report-no-vulns-found.png" alt="command line audit report no vulnerabilities found" /></span></p>
+
+<h2 id="turning-off-npm-audit-on-package-installation">Turning off <code class="highlighter-rouge">npm audit</code> on package installation</h2>
+
+<h3 id="installing-a-single-package">Installing a single package</h3>
+
+<p>To turn off <code class="highlighter-rouge">npm audit</code> when installing a single package, use the <code class="highlighter-rouge">--no-audit</code> flag:</p>
+
+<p><code class="highlighter-rouge">npm install example-package-name --no-audit</code></p>
+
+<p>For more information, see the <a href="/cli/install"><code class="highlighter-rouge">npm-install</code> command</a>.</p>
+
+<h3 id="installing-all-packages">Installing all packages</h3>
+
+<p>To turn off <code class="highlighter-rouge">npm audit</code> when installing all packages, set the <code class="highlighter-rouge">audit</code> setting to <code class="highlighter-rouge">false</code> in your user and global npmrc config files:</p>
+
+<p><code class="highlighter-rouge">npm set audit false</code></p>
+
+<p>For more information, see the <a href="/cli/config"><code class="highlighter-rouge">npm-config</code> management command</a> and the <a href="/cli/config#audit"><code class="highlighter-rouge">npm-config</code> audit setting</a>.</p>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="paginate">
+
+<hr />
+
+
+
+  <a href="/about-audit-reports">< About audit reports</a>
+
+
+
+
+
+  | <a href="/about-pgp-signatures-for-packages-in-the-public-registry">About package PGP signatures ></a>
+
+
+
+</div>
+
+
+</div>
+
+<footer>
+  <div class="container">
+
+    
+
+    <div id="npm-install-instructions">
+      <p>
+        The current stable version of npm is <a id="npm-stable-version" href="https://github.com/npm/cli/releases/latest">here</a>. To upgrade, run: <code>npm install <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="84eaf4e9c4e8e5f0e1f7f0">[email&#160;protected]</a> -g</code>
+      </p>
+    </div>
+
+    <p>
+     To report bugs or submit feature requests for the docs, please <a href="https://npm.community/c/support/docs-needed">post here.</a> Submit npm issues <a href="https://npm.community/c/bugs">here</a>.
+    </p>
+
+  </div>
+</footer>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  (function() {
+    if (document.querySelectorAll) {
+      var selector = [
+        '.article h2', '.article h3', '.article h4', '.article h5', '.article h6',
+        '.cli-article h2', '.cli-article h3', '.cli-article h4', '.cli-article h5', '.cli-article h6'
+      ].join(',')
+
+      Array.prototype.slice.call(document.querySelectorAll(selector)).forEach(function(elem) {
+        var link = document.createElement('a')
+        link.href = '#' + elem.id
+        link.innerText = elem.innerText
+        elem.innerText = ''
+
+        elem.appendChild(link)
+
+        var icon = document.createElement('span')
+        icon.classList.add('anchor-icon')
+        icon.innerText = '§'
+        link.appendChild(icon)
+      })
+    }
+  })()
+</script>
+
+<script src="/assets/js/marketing/google_analytics.js" type="text/javascript"></script>
+<script src="/assets/js/marketing/eloqua.js" type="text/javascript"></script>
+
